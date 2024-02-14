@@ -1,6 +1,5 @@
 package com.portal.dto;
 
-
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,12 +10,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReviewDto {
+public class UpdateReviewDTO {
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@NotBlank
+	private Long reviewId;
+	
 	
 	@JsonProperty(access = Access.READ_WRITE)
 	@NotBlank
@@ -70,8 +72,6 @@ public class ReviewDto {
 		this.userId = userId;
 	}
 
-	
-
 	@Override
 	public String toString() {
 		return "ReviewDto [propertyId=" + propertyId + ", rating=" + rating + ", comment=" + comment + ", userId="
@@ -79,9 +79,6 @@ public class ReviewDto {
 	}
 	
 	
-	
-	
-	
-	
 
 }
+
