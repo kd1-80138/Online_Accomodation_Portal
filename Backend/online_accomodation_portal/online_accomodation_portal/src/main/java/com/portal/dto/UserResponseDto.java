@@ -1,6 +1,6 @@
 package com.portal.dto;
 
-import javax.persistence.AccessType;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
