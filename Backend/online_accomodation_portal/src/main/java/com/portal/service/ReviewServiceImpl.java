@@ -1,5 +1,9 @@
 package com.portal.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
@@ -10,6 +14,8 @@ import com.portal.dao.PropertyRepository;
 import com.portal.dao.ReviewRepository;
 import com.portal.dao.UserDao;
 import com.portal.dto.ReviewDto;
+import com.portal.dto.PropertyReviewRespDTO;
+import com.portal.dto.UpdateReviewDTO;
 import com.portal.entities.Property;
 import com.portal.entities.PropertyReview;
 import com.portal.entities.User;
@@ -42,6 +48,61 @@ public class ReviewServiceImpl implements ReviewService {
 		review.setUser(user);
 		reviewRepo.save(review);
 		return "Review  Added Successfully";
+	}
+
+	// incomplete
+	@Override
+	public List<PropertyReviewRespDTO> fetchAllReviews(Long propertyId) {
+
+		List<PropertyReviewRespDTO> responseList = new ArrayList<PropertyReviewRespDTO>();
+		if (propertyRepo.existsById(propertyId)) {
+			Property property = propertyRepo.findById(propertyId)
+					.orElseThrow(() -> new CustomException("property not found"));
+
+			List<PropertyReview> propertyReviewList = reviewRepo.findByProperty(property);
+
+			responseList = Arrays.asList(mapper.map(propertyReviewList, PropertyReviewRespDTO[].class));
+		}
+		return responseList;
+	}
+
+	@Override
+	public List<PropertyReviewRespDTO> showAllReviewsByUser(Long userId) {
+
+		List<PropertyReviewRespDTO> responseList = new ArrayList<PropertyReviewRespDTO>();
+		if (userDao.existsById(userId)) {
+			User user = userDao.findById(userId).orElseThrow(() -> new CustomException("user not found"));
+
+			List<PropertyReview> propertyReviewList = reviewRepo.findByUser(user);
+
+			responseList = Arrays.asList(mapper.map(propertyReviewList, PropertyReviewRespDTO[].class));
+		}
+		return responseList;
+	}
+
+	@Override
+	public String deleteReview(Long reviewId) {
+		// TODO Auto-generated method stub
+		if (reviewRepo.existsById(reviewId)) {
+			reviewRepo.deleteById(reviewId);
+			return "Review Deleted Successfully";
+		} else {
+			return "ReviewId Is Invalid";
+
+		}
+	}
+
+	@Override
+	public String updateReview(UpdateReviewDTO dto) {
+		// TODO Auto-generated method stub
+		PropertyReview propertyReview = reviewRepo.findById(dto.getReviewId())
+				.orElseThrow(() -> new CustomException("Property Not Found"));
+		// propertyReview = mapper.map(dto, PropertyReview.class);
+
+		propertyReview.setComment(dto.getComment());
+		propertyReview.setRating(dto.getRating());
+		reviewRepo.save(propertyReview);
+		return "Review updated Successfully";
 	}
 
 }

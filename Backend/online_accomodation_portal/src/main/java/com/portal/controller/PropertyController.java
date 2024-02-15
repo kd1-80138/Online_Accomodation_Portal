@@ -2,10 +2,10 @@ package com.portal.controller;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,46 +21,43 @@ import com.portal.service.PropertyService;
 @RestController
 @RequestMapping("/property")
 public class PropertyController {
-	
+
 	@Autowired
 	private PropertyService propertyService;
-	
-	
-	
+
 	@PostMapping("/add")
-	public ResponseEntity<?> addProperty(@RequestBody AddPropertyDto dto )
-	{
-		if(propertyService.addProperty(dto))
-		{
+	public ResponseEntity<?> addProperty(@RequestBody AddPropertyDto dto) {
+		if (propertyService.addProperty(dto)) {
 			return ResponseEntity.status(HttpStatus.OK).body("Property Added SuccessFully");
 		}
-		
+
 		return ResponseEntity.status(HttpStatus.OK).body("Failed to Add Property");
-		
+
 	}
-	
-	@GetMapping("/delete/{propertyId}")
-	public ResponseEntity<?> deleteProperty (@PathVariable Long propertyId){
+
+	@DeleteMapping("/delete/{propertyId}")
+	public ResponseEntity<?> deleteProperty(@PathVariable Long propertyId) {
 		System.out.println("Inside delete Property controller");
-		
-		if(! propertyService.deleteProperty(propertyId)) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Property Not Found ...Failed To Delete Property!!");
-			
+
+		if (!propertyService.deleteProperty(propertyId)) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Property Not Found ...Failed To Delete Property!!");
+
 		}
-		
+
 		return ResponseEntity.status(HttpStatus.OK).body("Property Deleted Successfully!!");
 	}
-	
+
 	@GetMapping("/properties/{city}")
-	public ResponseEntity<?> getPropertyList(@RequestParam String city){
-		
-	     List<PropertyResponseDto>propertyList = 	propertyService.getPropertyList(city);
-	     
-	     if(propertyList==null)
-	    	 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something went wrong !! ");
-		
-    	 return ResponseEntity.status(HttpStatus.OK).body(propertyList);
-		
+	public ResponseEntity<?> getPropertyList(@PathVariable String city) {
+
+		List<PropertyResponseDto> propertyList = propertyService.getPropertyList(city);
+
+		if (propertyList == null)
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something went wrong !! ");
+
+		return ResponseEntity.status(HttpStatus.OK).body(propertyList);
+
 	}
 
 }
