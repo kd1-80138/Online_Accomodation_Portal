@@ -3,12 +3,11 @@ package com.portal.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
-
 import org.modelmapper.ModelMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.portal.dao.CityRepository;
 import com.portal.dao.FlatCategoryRepository;
@@ -20,6 +19,7 @@ import com.portal.entities.City;
 import com.portal.entities.FlatCategory;
 import com.portal.entities.Property;
 import com.portal.entities.User;
+import com.portal.entities.UserRole;
 import com.portal.exception.CustomException;
 
 @Service
@@ -49,34 +49,37 @@ public class PropertyServiceImpl implements PropertyService {
 		Property property = mapper.map(dto, Property.class);
 		User user = userDao.findById(dto.getUserId()).orElseThrow(() -> new CustomException("User Invalid"));
 
-		property.setUser(user);
+		if (user.getRole().equals(UserRole.ROLE_OWNER)) {
+			property.setUser(user);
 
-		City city = cityRepo.findByCityName(dto.getCityName());
-		System.out.println(city.toString());
-		if (city == null) {
-			return false;
+			City city = cityRepo.findByCityName(dto.getCityName());
+			
+			if (city == null) {
+				return false;
+			} else {
+				property.setCity(city);
+
+			}
+			FlatCategory flatCategory = flatRepo.findByCategoryNameAndDescription(dto.getCategoryName(),
+					dto.getDescription());
+			if (flatCategory == null) {
+				flatCategory = mapper.map(dto, FlatCategory.class);
+				System.out.println(flatCategory.toString());
+				flatRepo.save(flatCategory);
+			}
+			System.out.println(flatCategory.toString());
+
+			property.setCategory(flatCategory);
+
+			System.out.println(flatCategory.toString());
+			propertyRepo.save(property);
+			System.out.println(property.getSociety() + " " + property.getIsAvailable());
+
+			return true;
 		} else {
-			property.setCity(city);
-
-		}
-		FlatCategory flatCategory= flatRepo.findByCategoryNameAndDescription(dto.getCategoryName(),dto.getDescription());
-		if(flatCategory==null ) { 
-		flatCategory = mapper.map(dto, FlatCategory.class);
-		System.out.println(flatCategory.toString());
-		flatRepo.save(flatCategory);
-		}
-		System.out.println(flatCategory.toString());
-
-		property.setCategory(flatCategory);
-
-		System.out.println(flatCategory.toString());
-		propertyRepo.save(property);
-		System.out.println(property.getSociety() + " " + property.getIsAvailable());
-
-		if (property == null)
 			return false;
+		}
 
-		return true;
 	}
 
 	@Override
@@ -106,6 +109,15 @@ public class PropertyServiceImpl implements PropertyService {
 		List<PropertyResponseDto> propertyList = propertyResp.stream()
 				.map(property -> mapper.map(property, PropertyResponseDto.class)).collect(Collectors.toList());
 		return propertyList;
+	}
+
+	@Override
+	public List<PropertyResponseDto> listAllProperties() {
+		List<Property> propList = propertyRepo.findAll();
+
+		List<PropertyResponseDto> propRespList = propList.stream()
+				.map(property -> mapper.map(property, PropertyResponseDto.class)).collect(Collectors.toList());
+		return propRespList;
 	}
 
 }
