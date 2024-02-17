@@ -4,8 +4,14 @@ import java.util.List;
 
 import com.portal.dto.ApiResponse;
 import com.portal.dto.ApprovedDTO;
+
+import com.portal.dto.EditPassDTO;
 import com.portal.dto.EditPasswordDTO;
 import com.portal.dto.LoginDto;
+import com.portal.dto.OTPVerificationDTO;
+
+import com.portal.dto.LoginDto;
+
 import com.portal.dto.Signup;
 import com.portal.dto.UserDTO;
 import com.portal.dto.UserResponseDto;
@@ -40,5 +46,12 @@ public interface UserService {
 	List<UserDTO> getAllOwners();
 
 	List<UserDTO> getAllCustomers();
+
+	void getotpForForgotPass(String email);
+	
+	boolean verifyOTP(OTPVerificationDTO otpVerificationDTO);
+	
+	boolean forgotchangePassword(EditPassDTO changePasswordDTO);
+
 
 }
