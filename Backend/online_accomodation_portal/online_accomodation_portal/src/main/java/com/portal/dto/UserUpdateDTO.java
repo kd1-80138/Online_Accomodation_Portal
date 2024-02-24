@@ -6,9 +6,9 @@ import javax.validation.constraints.NotBlank;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-import com.portal.entities.Gender;
+
 import com.portal.entities.Status;
-import com.portal.entities.UserRole;
+
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

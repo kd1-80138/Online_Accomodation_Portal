@@ -69,7 +69,6 @@ public class UserController {
 	}
 
 	// Forgot password send otp
-	// http://localhoast:7070/user/getotpforforgotpass
 	@PostMapping("/getotpforforgotpass")
 	public ResponseEntity<String> getOtpForForgotPass(@RequestBody ForgetPassOtpDTO emailId) {
 		System.out.println(emailId);
@@ -111,4 +110,5 @@ public class UserController {
 			return ResponseEntity.badRequest().body("Password change failed");
 		}
 	}
+
 }

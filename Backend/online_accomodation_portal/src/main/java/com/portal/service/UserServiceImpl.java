@@ -10,12 +10,20 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.portal.exception.ResourceNotFoundException;
+
 import com.portal.dao.OTPRepository;
 import com.portal.dao.UserDao;
 import com.portal.dto.ApiResponse;
@@ -27,11 +35,14 @@ import com.portal.dto.OTPDTO;
 import com.portal.dto.OTPVerificationDTO;
 import com.portal.dto.PropertyResponseDto;
 import com.portal.dto.SigninRequest;
+
 import com.portal.dto.Signup;
 import com.portal.dto.UserDTO;
 import com.portal.dto.UserResponseDto;
 import com.portal.dto.UserUpdateDTO;
+
 import com.portal.entities.OTP;
+
 import com.portal.entities.Status;
 import com.portal.entities.User;
 import com.portal.entities.UserRole;
@@ -56,10 +67,10 @@ public class UserServiceImpl implements UserService {
 	private PasswordEncoder encoder;
 
 	@Autowired
-	private OTPRepository otpRepo;
+	private JavaMailSender javaMailSender;
 
 	@Autowired
-	private JavaMailSender javaMailSender;
+	private OTPRepository otpRepo;
 
 	public UserServiceImpl() {
 		System.out.println("in a cotr " + getClass());
@@ -222,6 +233,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	// ------------------------------------------------
+
 	private String generateOTP() {
 		int otpLength = 6;
 		String numbers = "0123456789";
@@ -256,7 +268,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void getotpForForgotPass(String emailId) {
 		OTP dbotp = new OTP();
+    
 		User cust = userdao.findByEmail(emailId);// .orElseThrow(() -> new ResourceNotFoundException("Invalid id"));
+
 		System.out.println("-------" + cust.toString());
 
 		userObj.setEmail(emailId);
@@ -291,12 +305,14 @@ public class UserServiceImpl implements UserService {
 	public boolean forgotchangePassword(EditPassDTO changePasswordDTO) {
 
 		System.out.println(changePasswordDTO.getEmail());
+
 		User user = userdao.findByEmail(changePasswordDTO.getEmail());
 		// .orElseThrow(() -> new ResourceNotFoundException("Invalid Emailid"));
 		if (user != null && user.getEmail().equals(changePasswordDTO.getEmail())) {
 			// user.setPassword(changePasswordDTO.getNewPassword());
 
 			user.setPassword(encoder.encode(changePasswordDTO.getNewPassword()));
+
 			userdao.save(user);
 			return true;
 		}

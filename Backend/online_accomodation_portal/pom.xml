@@ -107,6 +107,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
+
 		<!-- https://mvnrepository.com/artifact/com.sun.mail/javax.mail -->
 		<dependency>
 			<groupId>com.sun.mail</groupId>

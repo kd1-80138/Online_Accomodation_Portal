@@ -9,9 +9,7 @@ import lombok.ToString;
 @ToString
 public class EditPasswordDTO {
 	private Long id;
-
 	private String newpaasword;
-
 	private String oldpassword;
 
 }
