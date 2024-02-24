@@ -9,7 +9,8 @@ import com.portal.entities.PropertyReview;
 import com.portal.entities.User;
 
 public interface ReviewRepository extends JpaRepository<PropertyReview, Long> {
-	List<PropertyReview> findByProperty(Property p1);
+
+	List<PropertyReview> findByPropertyAndUserIsNotNull(Property property);
 
 	List<PropertyReview> findByUser(User u);
 }

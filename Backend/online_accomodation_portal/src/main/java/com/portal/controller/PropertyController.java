@@ -48,11 +48,23 @@ public class PropertyController {
 		return ResponseEntity.status(HttpStatus.OK).body("Property Deleted Successfully!!");
 	}
 
+	@GetMapping("/propertylist/{ownerId}")
+	public ResponseEntity<?> getPropertyListByOwner(@PathVariable Long ownerId) {
+		System.out.println("id = " + ownerId);
+		List<PropertyResponseDto> propertyList = propertyService.getPropertyListByOwner(ownerId);
+
+		if (propertyList == null)
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something went wrong !! ");
+
+		return ResponseEntity.status(HttpStatus.OK).body(propertyList);
+
+	}
+
 	@GetMapping("/properties/{city}")
 	public ResponseEntity<?> getPropertyList(@PathVariable String city) {
 
 		List<PropertyResponseDto> propertyList = propertyService.getPropertyList(city);
-
+		System.out.println("City = " + city);
 		if (propertyList == null)
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something went wrong !! ");
 

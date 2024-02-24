@@ -11,7 +11,7 @@ import com.portal.entities.UserRole;
 
 public interface UserDao extends JpaRepository<User, Long> {
 
-	Optional<User> findByEmail(String email);
+	User findByEmail(String email);
 
 	Optional<User> findByEmailAndPassword(String email, String password);
 

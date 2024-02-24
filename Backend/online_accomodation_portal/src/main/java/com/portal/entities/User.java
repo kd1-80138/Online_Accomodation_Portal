@@ -68,6 +68,24 @@ public class User extends BaseEntity {
 		this.propertyList = new ArrayList<Property>();
 	}
 
+	
+	
+	public User(String firstName, String lastName, long mobileNo, String email, String password, String address,
+			Gender gender, UserRole role, Status status) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.mobileNo = mobileNo;
+		this.email = email;
+		this.password = password;
+		this.address = address;
+		this.gender = gender;
+		this.role = role;
+		this.status = status;
+	}
+
+
+
 	public String getFirstName() {
 		return firstName;
 	}

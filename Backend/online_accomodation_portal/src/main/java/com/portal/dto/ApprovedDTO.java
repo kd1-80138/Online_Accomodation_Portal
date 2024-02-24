@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class ApprovedDTO {
-	private Long userId;
+	private Long id;
 	private UserRole role;
 	private Status status;
 }

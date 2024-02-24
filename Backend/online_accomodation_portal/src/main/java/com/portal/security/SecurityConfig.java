@@ -13,6 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity // to enable spring sec frmwork support
 @Configuration // to tell SC , this is config class containing @Bean methods
@@ -30,16 +33,28 @@ public class SecurityConfig {
 	private CustomAuthenticationEntryPoint authEntry;
 
 	@Bean
+	public CorsFilter corsFilter() {
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		config.addAllowedOrigin("*"); // Allow all origins
+		config.addAllowedHeader("*"); // Allow all headers
+		config.addAllowedMethod("*"); // Allow all HTTP methods
+		source.registerCorsConfiguration("/**", config);
+		return new CorsFilter(source);
+	}
+
+	@Bean
 	public SecurityFilterChain authorizeRequests(HttpSecurity http) throws Exception {
 		// URL based authorization rules
 		http.cors().and().
 		// disable CSRF token generation n verification
 				csrf().disable().exceptionHandling().authenticationEntryPoint(authEntry).and().authorizeRequests()
-				.antMatchers("/products/view", "/users/signup", "/users/signin", "/v*/api-doc*/**", "/swagger-ui/**")
-				.permitAll()
+				.antMatchers("/users/signup", "/users/signin", "/v*/api-doc*/**", "/swagger-ui/**").permitAll()
 				// only required for JS clnts (react / angular) : for the pre flight requests
-				.antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/products/purchase").hasRole("CUSTOMER")
-				.antMatchers("/products/add").hasRole("ADMIN").anyRequest().authenticated().and()
+				.antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/property/add").hasRole("OWNER")
+				.antMatchers("/book/{userId}").hasRole("CUSTOMER")
+				.antMatchers("/admin/role/approved", "/admin/users/delete/{userId}").hasRole("ADMIN").anyRequest()
+				.authenticated().and()
 				// to tell spring sec : not to use HttpSession to store user's auth details
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				// inserting jwt filter before sec filter

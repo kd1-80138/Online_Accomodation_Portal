@@ -16,4 +16,6 @@ public interface CityService {
 
 	public CitiesDTO updateCity(CitiesDTO citydto);
 
+	public CitiesDTO getCityByName(String cityName);
+
 }

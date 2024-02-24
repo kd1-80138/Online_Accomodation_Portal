@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.portal.dto.SigninRequest;
 import com.portal.dto.SigninResponse;
 import com.portal.dto.Signup;
+import com.portal.entities.Status;
+import com.portal.entities.User;
 import com.portal.security.JwtUtils;
 import com.portal.service.UserService;
 
@@ -50,13 +53,19 @@ public class UserSignInSignUpController {
 		// i/f --> Authentication --> imple by UsernamePasswordAuthToken
 		// throws exc OR rets : verified credentials (UserDetails i.pl class: custom
 		// user details)
-
+		User user = userService.getUserByEmail(reqDTO);
+		String msg = "";
+		if (user.getStatus() != Status.PENDING) {
+			msg = "Successful Authentication!!!";
+		} else {
+			msg = "401";
+		}
 		Authentication verifiedAuth = mgr
 				.authenticate(new UsernamePasswordAuthenticationToken(reqDTO.getEmail(), reqDTO.getPassword()));
 		System.out.println(verifiedAuth.getClass());// Custom user details
 		// => auth success
-		return ResponseEntity
-				.ok(new SigninResponse(utils.generateJwtToken(verifiedAuth), "Successful Authentication!!!"));
+		return ResponseEntity.ok(new SigninResponse(utils.generateJwtToken(verifiedAuth), msg,
+				utils.getAuthoritiesInString(verifiedAuth.getAuthorities()), user.getFirstName(), user.getId()));
 
 	}
 

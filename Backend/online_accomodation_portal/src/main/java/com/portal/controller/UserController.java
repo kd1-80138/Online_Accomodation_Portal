@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.portal.dto.EditPassDTO;
 import com.portal.dto.EditPasswordDTO;
-
+import com.portal.dto.ForgetPassOtpDTO;
+import com.portal.dto.OTPVerificationDTO;
 import com.portal.dto.UserDTO;
 import com.portal.dto.UserUpdateDTO;
 
@@ -62,24 +64,51 @@ public class UserController {
 	// http://localhoast:7070/user/password
 	@PutMapping("/password")
 	public ResponseEntity<?> changePassword(@RequestBody EditPasswordDTO password) {
-		System.out.println("hi"+password.getNewpaasword());
+		System.out.println("hi" + password.getNewpaasword());
 		return ResponseEntity.status(HttpStatus.OK).body(userService.editCustomerPassword(password));
 	}
 
 	// Forgot password send otp
-	// http://localhoast:7070/user/password
-//	@PostMapping("/getotpforforgotpass")
-//	public ResponseEntity<String> getOtpForForgotPass(@RequestBody ForgetPassOtpDTO emailId) {
-//		System.out.println(emailId);
-//		String email = emailId.getEmail();
-//		System.out.println(email);
-//		userService.getOtpForForgotPass(email);
-//		return ResponseEntity.ok("OTP sent for verification.");
-//	}
+	// http://localhoast:7070/user/getotpforforgotpass
+	@PostMapping("/getotpforforgotpass")
+	public ResponseEntity<String> getOtpForForgotPass(@RequestBody ForgetPassOtpDTO emailId) {
+		System.out.println(emailId);
+		String email = emailId.getEmail();
+		System.out.println(email);
+		userService.getotpForForgotPass(email);
+		return ResponseEntity.ok("OTP sent for verification.");
+	}
 
-//	@PostMapping("/forgotpass")
-//	public ResponseEntity<?> forgotPassword(@RequestBody ForgetPassOtpDTO fpass) {
-//
-//		return ResponseEntity.status(HttpStatus.CREATED).body(userService.passwordReset(fpass));
-//	}
+	@PostMapping("/verifyotpforforgot")
+	public ResponseEntity<?> verifyOTPForForgotPass(@RequestBody OTPVerificationDTO otpVerificationDTO) {
+		System.out.println(otpVerificationDTO);
+		boolean isVerified = userService.verifyOTP(otpVerificationDTO);
+
+		try {
+
+			if (isVerified) {
+
+				return ResponseEntity.ok("OTP Verification is Successful");
+			} else {
+				return ResponseEntity.badRequest().body("OTP verification failed.");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("error occured during OTP verififcation");
+		}
+
+	}
+
+	@PostMapping("/storenewpass")
+	public ResponseEntity<?> storeNewPass(@RequestBody EditPassDTO editpassword) {
+		boolean isPasswordChanged = userService.forgotchangePassword(editpassword);
+
+		if (isPasswordChanged) {
+			return ResponseEntity.ok("Password changed successfully");
+		} else {
+			return ResponseEntity.badRequest().body("Password change failed");
+		}
+	}
 }

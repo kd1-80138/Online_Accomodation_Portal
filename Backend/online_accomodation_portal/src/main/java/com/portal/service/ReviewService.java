@@ -8,7 +8,7 @@ import com.portal.dto.UpdateReviewDTO;
 
 public interface ReviewService {
 
-	String addReview(ReviewDto dto);
+	String addReview(ReviewDto dto, Long propertyId);
 
 	List<PropertyReviewRespDTO> fetchAllReviews(Long propertyId);
 

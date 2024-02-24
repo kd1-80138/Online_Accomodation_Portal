@@ -14,4 +14,6 @@ public interface PropertyService {
 	List<PropertyResponseDto> getPropertyList(String city);
 
 	List<PropertyResponseDto> listAllProperties();
+
+	List<PropertyResponseDto> getPropertyListByOwner(Long ownerId);
 }

@@ -15,35 +15,40 @@ import com.portal.entities.PropertyBooking;
 import com.portal.entities.User;
 import com.portal.exception.CustomException;
 
-
 @Service
 @Transactional
-public class BookingServiceImpl implements BookingService{
-	
+public class BookingServiceImpl implements BookingService {
+
 	@Autowired
 	private BookingRepository bookingRepo;
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
-	private PropertyRepository propertyRepo; 
-	
-	
+	private PropertyRepository propertyRepo;
 
 	@Override
-	public LocalDateTime bookProperty(Long userId, Long propertyId) {
-		
-		User user = userDao.findById(userId).orElseThrow(()->new CustomException("Invalid User"));
-		Property property = propertyRepo.findById(propertyId).orElseThrow(()->new CustomException("Invalid Property"));
+	public String bookProperty(Long userId, Long propertyId) {
 		PropertyBooking propertyBooking = new PropertyBooking();
-		propertyBooking.setFlatCategoryId(property.getCategory());
-		propertyBooking.setPropertyId(property);
-		propertyBooking.setUserId(user);
-		propertyBooking.setBookingDateTime(LocalDateTime.now());
-		bookingRepo.save(propertyBooking);
-		property.setIsAvailable(false);
+		User user = userDao.findById(userId).orElseThrow(() -> new CustomException("Invalid User"));
+		Property property = propertyRepo.findById(propertyId)
+				.orElseThrow(() -> new CustomException("Invalid Property"));
+		System.out.println("in booking service" + property.getIsAvailable());
+		if (property.getIsAvailable()) {
+
+			propertyBooking.setFlatCategoryId(property.getCategory());
+			propertyBooking.setPropertyId(property);
+			propertyBooking.setUserId(user);
+			;
+			bookingRepo.save(propertyBooking);
+			property.setIsAvailable(false);
 			propertyRepo.save(property);
-				return propertyBooking.getBookingDateTime();
+			propertyBooking.setBookingDateTime(LocalDateTime.now());
+			return "Property Booking Successfully Done";
+		} else {
+			return "Property Booking Not Available Already Booked";
+		}
+
 	}
 
 }

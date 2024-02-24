@@ -3,7 +3,10 @@ package com.portal.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 
@@ -13,20 +16,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.portal.exception.ResourceNotFoundException;
+import com.portal.dao.OTPRepository;
 import com.portal.dao.UserDao;
 import com.portal.dto.ApiResponse;
 import com.portal.dto.ApprovedDTO;
+import com.portal.dto.EditPassDTO;
 import com.portal.dto.EditPasswordDTO;
 import com.portal.dto.LoginDto;
+import com.portal.dto.OTPDTO;
+import com.portal.dto.OTPVerificationDTO;
 import com.portal.dto.PropertyResponseDto;
+import com.portal.dto.SigninRequest;
 import com.portal.dto.Signup;
 import com.portal.dto.UserDTO;
 import com.portal.dto.UserResponseDto;
 import com.portal.dto.UserUpdateDTO;
+import com.portal.entities.OTP;
 import com.portal.entities.Status;
 import com.portal.entities.User;
 import com.portal.entities.UserRole;
 import com.portal.exception.CustomException;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 @Service
 @Transactional
@@ -40,6 +54,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private PasswordEncoder encoder;
+
+	@Autowired
+	private OTPRepository otpRepo;
+
+	@Autowired
+	private JavaMailSender javaMailSender;
 
 	public UserServiceImpl() {
 		System.out.println("in a cotr " + getClass());
@@ -156,7 +176,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponseDto verifyRoleTOApprove(ApprovedDTO approveddto) {
 
-		User user = userdao.findById(approveddto.getUserId())
+		System.out.println("inverify role service " + approveddto.getId() + approveddto.getStatus());
+		User user = userdao.findById(approveddto.getId())
 				.orElseThrow(() -> new CustomException("Invalid Id Plz Try Again"));
 		user.setRole(approveddto.getRole());
 		user.setStatus(approveddto.getStatus());
@@ -172,7 +193,8 @@ public class UserServiceImpl implements UserService {
 		// dto --> entity
 		User user = mapper.map(reqDTO, User.class);
 		user.setPassword(encoder.encode(user.getPassword()));// pwd : encrypted using SHA
-		return mapper.map(userdao.save(user), Signup.class);
+		userdao.save(user);
+		return mapper.map(user, Signup.class);
 	}
 
 	@Override
@@ -189,5 +211,95 @@ public class UserServiceImpl implements UserService {
 		List<UserDTO> customersRespList = customersList.stream().map(user -> mapper.map(user, UserDTO.class))
 				.collect(Collectors.toList());
 		return customersRespList;
+	}
+
+	@Override
+	public User getUserByEmail(SigninRequest reqDTO) {
+		
+		User user = userdao.findByEmail(reqDTO.getEmail());
+		//if(user.getStatus()!=Status.PENDING)
+		return user;
+	}
+
+	// ------------------------------------------------
+	private String generateOTP() {
+		int otpLength = 6;
+		String numbers = "0123456789";
+		StringBuilder otp = new StringBuilder();
+
+		for (int i = 0; i < otpLength; i++) {
+			int index = (int) (Math.random() * numbers.length());
+			otp.append(numbers.charAt(index));
+		}
+
+		return otp.toString();
+	}
+
+	private void sendOTPEmail(String email, String otp) {
+
+		MimeMessage message = javaMailSender.createMimeMessage();
+
+		try {
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+			helper.setTo(email);
+			helper.setSubject("OTP Verification");
+			helper.setText("Your OTP for registration is: " + otp);
+			javaMailSender.send(message);
+		} catch (MessagingException e) {
+			// Handle exception
+		}
+	}
+
+	OTP otpobj = new OTP();
+	OTPDTO userObj = new OTPDTO();
+
+	@Override
+	public void getotpForForgotPass(String emailId) {
+		OTP dbotp = new OTP();
+		User cust = userdao.findByEmail(emailId);// .orElseThrow(() -> new ResourceNotFoundException("Invalid id"));
+		System.out.println("-------" + cust.toString());
+
+		userObj.setEmail(emailId);
+		if (cust.getEmail() != null) {
+			String otp = generateOTP();
+			sendOTPEmail(emailId, otp);
+			otpobj.setEmail(emailId);
+			otpobj.setOtp(otp);
+			dbotp.setOtp(otp);
+			dbotp.setEmail(emailId);
+			// dao.saveAll(dbotp);
+			otpRepo.save(dbotp);
+		} else if (cust.getEmail() == null && cust != null)
+			throw new ResourceNotFoundException("User Does not exist from userServiceImpl Class");
+	}
+
+	@Override
+	public boolean verifyOTP(OTPVerificationDTO otpVerificationDTO) {
+
+		OTP storedOTP = otpRepo.findByEmail(otpVerificationDTO.getEmail());
+		System.out.println("in service=====>" + storedOTP.getOtp() + storedOTP.getEmail());
+
+		if (storedOTP != null && storedOTP.getOtp().equals(otpVerificationDTO.getOtp())) {
+
+			return true;
+
+		}
+		return false;
+	}
+
+	@Override
+	public boolean forgotchangePassword(EditPassDTO changePasswordDTO) {
+
+		System.out.println(changePasswordDTO.getEmail());
+		User user = userdao.findByEmail(changePasswordDTO.getEmail());
+		// .orElseThrow(() -> new ResourceNotFoundException("Invalid Emailid"));
+		if (user != null && user.getEmail().equals(changePasswordDTO.getEmail())) {
+			// user.setPassword(changePasswordDTO.getNewPassword());
+
+			user.setPassword(encoder.encode(changePasswordDTO.getNewPassword()));
+			userdao.save(user);
+			return true;
+		}
+		return false;
 	}
 }

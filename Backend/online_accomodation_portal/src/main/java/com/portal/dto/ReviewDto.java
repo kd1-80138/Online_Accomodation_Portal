@@ -18,34 +18,30 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReviewDto {
-	
+
+//	@JsonProperty(access = Access.READ_WRITE)
+//	// used during serialization
+//	private Long propertyId ;
+
+	@NotBlank
 	@JsonProperty(access = Access.READ_WRITE)
+	private float rating;
+
 	@NotBlank
-	// used during serialization
-	private Long propertyId ;
-	
-	@NotBlank
-	@JsonProperty(access = Access.READ_WRITE) 
-	private float rating ;
-	
-	@NotBlank
-	@JsonProperty(access = Access.READ_WRITE) 
+	@JsonProperty(access = Access.READ_WRITE)
 	private String comment;
-	
+
 	@NotBlank
-	@JsonProperty(access = Access.READ_WRITE) 
 	private Long userId;
 
-	
-	 public Long getPropertyId() {
-	 
-	 
-		return propertyId;
-	}
-
-	public void setPropertyId(Long propertyId) {
-		this.propertyId = propertyId;
-	}
+//	public Long getPropertyId() {
+//
+//		return propertyId;
+//	}
+//
+//	public void setPropertyId(Long propertyId) {
+//		this.propertyId = propertyId;
+//	}
 
 	public float getRating() {
 		return rating;
@@ -71,18 +67,9 @@ public class ReviewDto {
 		this.userId = userId;
 	}
 
-	
-
 	@Override
 	public String toString() {
-		return "ReviewDto [propertyId=" + propertyId + ", rating=" + rating + ", comment=" + comment + ", userId="
-				+ userId + "]";
+		return "ReviewDto [ rating=" + rating + ", comment=" + comment + ", userId=" + userId + "]";
 	}
-	
-	
-	
-	
-	
-	
 
 }

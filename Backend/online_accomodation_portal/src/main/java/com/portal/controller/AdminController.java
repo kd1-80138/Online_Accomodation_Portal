@@ -61,7 +61,7 @@ public class AdminController {
 		return userService.showRejectedList();
 	}
 
-	@PostMapping("/role/approved")
+	@PutMapping("/role/approved")
 	public UserResponseDto verifyRole(@RequestBody ApprovedDTO approveddto) {
 		return userService.verifyRoleTOApprove(approveddto);
 	}
@@ -77,7 +77,7 @@ public class AdminController {
 	// delete user
 	// http://localhost:7070/admin/user/delete/id
 
-	@DeleteMapping("/user/delete/{userId}")
+	@DeleteMapping("/users/delete/{userId}")
 	public ResponseEntity<?> removeUser(@PathVariable Long userId) {
 		userService.removeUserById(userId);
 		return ResponseEntity.noContent().build();
