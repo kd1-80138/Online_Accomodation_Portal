@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.navbar{
+  background-color: black !important;
+  
+}
+
+.nav-link{
+  color: white !important;
+}
+
+.navbar-brand{
+  color: lightcoral !important;
+
+}
+
+.navbar-nav{
+  margin-left: auto ;
+}
+
+
+.city-search {
+  max-width: 530px;
+  margin: auto;
+  position: relative;
+}
+
+.city-heading {
+  text-align: center;
+}
+
+.city-card-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.city-card {
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px 0 rgba(154, 77, 77, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  display: inline-block;
+  padding: 20px;
+}
+
+.city-card:focus,
+.city-card:hover {
+  box-shadow: 0 5px 11px 0 rgba(0, 0, 0, 0.18), 0 4px 15px 0 rgba(0, 0, 0, 0.15);
+}
+
+.city-img {
+  height:150px;
+  width: 150px;
+}
+
+.city-img1{
+  height:40px;
+  width: 150px;
+  margin-left: 30px;
+  
+}
+
+.property-img{
+  height:50px ;
+  width: 50px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,32 @@
+.unique {
+    background-image: url(D:\poject\my work\021924\frontend\src\assets\properties\3\1d4f0757fdb86d5f.jpg);
+    background-size: 100%;
+    background-position: 58px;
+     height: 100%;
+     width: 100%;
+   
+  }
+
+.backimage{
+  background-image: url(/src/assets/bg7.jpg);
+  object-fit: cover;
+    background-size: 100%; 
+    height: 100%;
+    width: 100%;
+}
+
+.regisimage{
+  background-image: url(/src/assets/bg3.png);
+  
+    background-size: 100%; 
+    height: 100%;
+    width: 100%;
+}
+
+.adminimage{
+  background-image: url(/src/assets/bg18.JPG);
+  
+    background-size: 100%; 
+    height: 100%;
+    width: 100%;
+}
