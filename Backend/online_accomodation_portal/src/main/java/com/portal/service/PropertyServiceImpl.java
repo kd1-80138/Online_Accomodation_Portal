@@ -21,6 +21,7 @@ import com.portal.entities.Property;
 import com.portal.entities.User;
 import com.portal.entities.UserRole;
 import com.portal.exception.CustomException;
+import com.portal.exception.ResourceNotFoundException;
 
 @Service
 @Transactional
@@ -53,7 +54,7 @@ public class PropertyServiceImpl implements PropertyService {
 			property.setUser(user);
 
 			City city = cityRepo.findByCityName(dto.getCityName());
-			
+				System.out.println(city);
 			if (city == null) {
 				return false;
 			} else {
@@ -73,7 +74,7 @@ public class PropertyServiceImpl implements PropertyService {
 
 			System.out.println(flatCategory.toString());
 			propertyRepo.save(property);
-			System.out.println(property.getSociety() + " " + property.getIsAvailable());
+			System.out.println(property.getSociety() + " isAvailable " + property.getIsAvailable());
 
 			return true;
 		} else {
@@ -117,6 +118,17 @@ public class PropertyServiceImpl implements PropertyService {
 
 		List<PropertyResponseDto> propRespList = propList.stream()
 				.map(property -> mapper.map(property, PropertyResponseDto.class)).collect(Collectors.toList());
+		return propRespList;
+	}
+
+	@Override
+	public List<PropertyResponseDto> getPropertyListByOwner(Long ownerId) {
+		User user = userDao.findById(ownerId).orElseThrow(() -> new CustomException("User Invalid"));
+
+		List<Property> propList = propertyRepo.findByUser(user);
+		List<PropertyResponseDto> propRespList = propList.stream()
+				.map(property -> mapper.map(property, PropertyResponseDto.class)).collect(Collectors.toList());
+
 		return propRespList;
 	}
 

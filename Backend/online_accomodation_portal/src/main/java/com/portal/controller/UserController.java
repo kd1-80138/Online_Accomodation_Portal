@@ -64,27 +64,11 @@ public class UserController {
 	// http://localhoast:7070/user/password
 	@PutMapping("/password")
 	public ResponseEntity<?> changePassword(@RequestBody EditPasswordDTO password) {
-		System.out.println("hi"+password.getNewpaasword());
+		System.out.println("hi" + password.getNewpaasword());
 		return ResponseEntity.status(HttpStatus.OK).body(userService.editCustomerPassword(password));
 	}
 
 	// Forgot password send otp
-	// http://localhoast:7070/user/password
-//	@PostMapping("/getotpforforgotpass")
-//	public ResponseEntity<String> getOtpForForgotPass(@RequestBody ForgetPassOtpDTO emailId) {
-//		System.out.println(emailId);
-//		String email = emailId.getEmail();
-//		System.out.println(email);
-//		userService.getOtpForForgotPass(email);
-//		return ResponseEntity.ok("OTP sent for verification.");
-//	}
-
-//	@PostMapping("/forgotpass")
-//	public ResponseEntity<?> forgotPassword(@RequestBody ForgetPassOtpDTO fpass) {
-//
-//		return ResponseEntity.status(HttpStatus.CREATED).body(userService.passwordReset(fpass));
-//	}
-  
 	@PostMapping("/getotpforforgotpass")
 	public ResponseEntity<String> getOtpForForgotPass(@RequestBody ForgetPassOtpDTO emailId) {
 		System.out.println(emailId);
@@ -126,6 +110,5 @@ public class UserController {
 			return ResponseEntity.badRequest().body("Password change failed");
 		}
 	}
-
 
 }

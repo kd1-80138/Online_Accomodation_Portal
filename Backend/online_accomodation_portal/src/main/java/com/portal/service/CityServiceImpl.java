@@ -70,4 +70,11 @@ public class CityServiceImpl implements CityService {
 		return mapper.map(city, CitiesDTO.class);
 	}
 
+	@Override
+	public CitiesDTO getCityByName(String cityName) {
+		City cityEntity = cityRepo.findByCityName(cityName);
+
+		return mapper.map(cityEntity, CitiesDTO.class);
+	}
+
 }

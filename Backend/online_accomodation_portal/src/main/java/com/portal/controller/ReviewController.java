@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portal.dto.ReviewDto;
@@ -27,19 +28,20 @@ public class ReviewController {
 	private ReviewService reviewService;
 
 	@PostMapping("/add")
-	public ResponseEntity<?> addReview(@RequestBody ReviewDto dto) {
+	public ResponseEntity<?> addReview(@RequestBody ReviewDto dto, @RequestParam Long propertyId) {
 
 		System.out.println(dto.toString());
 
-		return ResponseEntity.status(HttpStatus.OK).body(reviewService.addReview(dto));
+		return ResponseEntity.status(HttpStatus.OK).body(reviewService.addReview(dto, propertyId));
 
 	}
 
 	// incomplete method
 	// get reviews by property id
 	// http:/localhost:8080/reviews/{propertyId}
-	@GetMapping("/property/{propertyId}")
-	public List<PropertyReviewRespDTO> showAllReviewsByProperty(@PathVariable Long propertyId) {
+	@GetMapping("/property")
+	public List<PropertyReviewRespDTO> showAllReviewsByProperty(@RequestParam Long propertyId) {
+		System.out.println("hiii" + propertyId);
 		return reviewService.fetchAllReviews(propertyId);
 	}
 

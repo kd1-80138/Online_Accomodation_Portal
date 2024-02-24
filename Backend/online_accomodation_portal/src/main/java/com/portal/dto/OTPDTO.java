@@ -20,3 +20,4 @@ public class OTPDTO {
 	private long mobNo;
 	private String address;
 }
+

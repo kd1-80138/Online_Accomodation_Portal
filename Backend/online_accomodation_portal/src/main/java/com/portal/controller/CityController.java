@@ -34,5 +34,10 @@ public class CityController {
 	public CitiesDTO getCityById(@PathVariable Long cityId) {
 		return cityService.getCityById(cityId);
 	}
+	
+	@GetMapping("findby/{cityName}")
+	public CitiesDTO getCityByName(@PathVariable String cityName) {
+		return cityService.getCityByName(cityName);
+	}
 
 }

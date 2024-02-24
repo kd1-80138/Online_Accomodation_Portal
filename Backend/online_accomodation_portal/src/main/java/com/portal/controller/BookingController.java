@@ -26,9 +26,7 @@ public class BookingController {
 	@PostMapping("/{userId}")
 	public ResponseEntity<?> bookProperty(@RequestParam Long propertyId, @PathVariable Long userId) {
 
-		LocalDateTime bookingDateTime = bookingService.bookProperty(userId, propertyId);
-
-		return ResponseEntity.status(HttpStatus.OK).body(bookingDateTime);
+		return ResponseEntity.status(HttpStatus.OK).body(bookingService.bookProperty(userId, propertyId));
 	}
 
 }

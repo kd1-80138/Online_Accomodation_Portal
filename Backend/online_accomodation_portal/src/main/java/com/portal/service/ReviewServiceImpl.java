@@ -37,10 +37,10 @@ public class ReviewServiceImpl implements ReviewService {
 	private UserDao userDao;
 
 	@Override
-	public String addReview(ReviewDto dto) {
+	public String addReview(ReviewDto dto, Long propertyId) {
 
 		System.out.println(dto.toString());
-		Property property = propertyRepo.findById(dto.getPropertyId())
+		Property property = propertyRepo.findById(propertyId)
 				.orElseThrow(() -> new CustomException("Property Not Found"));
 		User user = userDao.findById(dto.getUserId()).orElseThrow(() -> new CustomException("user not found"));
 		PropertyReview review = mapper.map(dto, PropertyReview.class);
@@ -53,15 +53,29 @@ public class ReviewServiceImpl implements ReviewService {
 	// incomplete
 	@Override
 	public List<PropertyReviewRespDTO> fetchAllReviews(Long propertyId) {
-
+		System.out.println("hiii" + propertyId);
 		List<PropertyReviewRespDTO> responseList = new ArrayList<PropertyReviewRespDTO>();
 		if (propertyRepo.existsById(propertyId)) {
 			Property property = propertyRepo.findById(propertyId)
 					.orElseThrow(() -> new CustomException("property not found"));
 
-			List<PropertyReview> propertyReviewList = reviewRepo.findByProperty(property);
+			List<PropertyReview> propertyReviewList = reviewRepo.findByPropertyAndUserIsNotNull(property);
 
-			responseList = Arrays.asList(mapper.map(propertyReviewList, PropertyReviewRespDTO[].class));
+			for (PropertyReview propertyReview : propertyReviewList) {
+				// Access userName from the associated User entity
+				String firstName = propertyReview.getUser().getFirstName();
+				String lastName = propertyReview.getUser().getLastName();
+				PropertyReviewRespDTO p = new PropertyReviewRespDTO();
+				p.setFirstName(firstName);
+				p.setLastName(lastName);
+				p.setRating(propertyReview.getRating());
+				p.setComment(propertyReview.getComment());
+				p.setId(propertyReview.getId());
+				responseList.add(p);
+			}
+
+			// responseList = Arrays.asList(mapper.map(propertyReviewList,
+			// PropertyReviewRespDTO[].class));
 		}
 		return responseList;
 	}
