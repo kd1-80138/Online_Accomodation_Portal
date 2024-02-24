@@ -1,0 +1,18 @@
+/* PropertyResponse.css */
+
+.add-property-button {
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Text color */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none; /* Remove default underline for links */
+    display: inline-block; /* Display as inline block */
+    margin-bottom: 20px; /* Add margin below the button */
+    transition: background-color 0.3s; /* Smooth transition on hover */
+  }
+  
+  .add-property-button:hover {
+    background-color: #0056b3; /* Darker background color on hover */
+  }
+  
