@@ -35,7 +35,7 @@ const Signin = () => {
 
            // make api call using axios
       axios
-      .post(`http://localhost:7070/users/signin`, body)
+      .post(`${BASE_URL}/users/signin`, body)
       .then((response) => {
         window.sessionStorage.setItem("id",response.data.id);
         window.sessionStorage.setItem("role",response.data.role);
