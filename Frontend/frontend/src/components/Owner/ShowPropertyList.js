@@ -6,6 +6,7 @@ import './PropertyResponse.css'
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import './AddPropertyButton.css'
 import ImageUploadForm from './AddImage'
+import { BASE_URL } from '../../url';
 const PropertyResponse = () => {
   const navigate = useNavigate();
   const [id, setId]=useState(" ");
@@ -25,7 +26,7 @@ const PropertyResponse = () => {
         Authorization: `Bearer ${token}` // Include JWT token in the request headers
       }
     };
-      const response = await axios.get(`http://localhost:7070/property/propertylist/${ownerId}`,config); // Replace '/api/endpoint' with your backend endpoint
+      const response = await axios.get(`${BASE_URL}/property/propertylist/${ownerId}`,config); // Replace '/api/endpoint' with your backend endpoint
       setPropertyResponse(response.data); // Set the property response in state
     } catch (error) {
       console.error('Error fetching property response:', error);

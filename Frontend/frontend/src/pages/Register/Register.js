@@ -3,7 +3,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { BASE_URL } from "../../url";
+import {BASE_URL} from "../../url";
 
 const Register = () => {
   const [address, setAddress] = useState("");
@@ -46,7 +46,7 @@ const Register = () => {
         role,
       };
 
-      const response = await axios.post("http://localhost:7070/users/signup", body);
+      const response = await axios.post(`${BASE_URL}/users/signup`, body);
 
       if (response.status === 201) {
         toast.success("Successfully signed up new user");

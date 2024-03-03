@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { BASE_URL } from '../../url';
 import {config} from '../../Token'
 import { toast } from 'react-toastify';
+import { BASE_URL } from '../../url';
 
 const AddProperty = () => {
   const [propertyDetails, setPropertyDetails] = useState({
@@ -59,7 +59,7 @@ const AddProperty = () => {
 
     // Send a POST request to your server with the property data
     axios
-      .post('http://localhost:7070/property/add', propertyDetails,config)
+      .post(`${BASE_URL}/property/add`, propertyDetails,config)
       .then((response) => {
         // Handle success, e.g., show a success message
         toast.success("PropertyDetails Added Successfully");

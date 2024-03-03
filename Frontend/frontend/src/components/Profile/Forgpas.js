@@ -3,6 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { BASE_URL } from '../../url';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const ForgotPassword = () => {
 
     axios({
       method: 'post',
-      url: 'http://localhost:7070/user/getotpforforgotpass',
+      url: `${BASE_URL}/user/getotpforforgotpass`,
       data: email,
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +43,7 @@ const ForgotPassword = () => {
 
     axios({
       method: 'post',
-      url: 'http://localhost:7070/user/verifyotpforforgot',
+      url: `${BASE_URL}/user/verifyotpforforgot`,
       data: verifyotpobj,
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
@@ -68,7 +69,7 @@ const ForgotPassword = () => {
 
     axios({
       method: 'post',
-      url: 'http://localhost:7070/user/storenewpass',
+      url: `${BASE_URL}/user/storenewpass`,
       data: saveForgotObject,
       headers: {
         'Content-Type': 'application/json',

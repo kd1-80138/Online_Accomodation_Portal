@@ -4,6 +4,7 @@ import { faEnvelope,faLock} from '@fortawesome/free-solid-svg-icons'
 import  './ChangePassword.css'
 import ProfilePage from './ProfilePage';
 import axios from 'axios';
+import { BASE_URL } from "../../url";
 //import { useEffect } from 'react';
 
 export default function ChangePassword() {
@@ -31,7 +32,7 @@ const handleChangePasswordd=(e)=>{
     debugger
     
     axios
-    .put("http://localhost:8080/User/password",user)
+    .put(`${BASE_URL}/User/password`,user)
   .then((response)=>{
     console.log("user registered successfully",response)
     // toast.success("user registered successfully");

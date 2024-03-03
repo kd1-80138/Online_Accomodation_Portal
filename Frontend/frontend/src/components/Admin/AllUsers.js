@@ -24,7 +24,7 @@ function AllUsers() {
 
   const fetchData = () => {
     axios
-      .get(`http://localhost:7070/admin/users`,config)
+      .get(`${BASE_URL}/admin/users`,config)
       .then((response) => {
         console.log(response.data);
         setData(response.data);

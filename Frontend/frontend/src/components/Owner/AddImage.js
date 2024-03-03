@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import {BASE_URL}  from '../../url';
 
 const ImageUploadForm = () => {
   const [file, setFile] = useState(null);
@@ -32,7 +33,7 @@ const ImageUploadForm = () => {
     
 
     try {
-      const response =  axios.post(`http://localhost:7070/image/upload/${propertyId}`, formData, {
+      const response =  axios.post(`${BASE_URL}/image/upload/${propertyId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': `Bearer ${token}`
